@@ -1,10 +1,9 @@
-CREATE DATABASE smartWalletV2;
+CREATE DATABASE IF NOT EXISTS smart_wallet;
+USE smart_wallet;
 
-USE smartWalletV2;
-
-CREATE table users(
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    full_name VARCHAR(50) NOT NULL UNIQUE,
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    full_name VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -12,11 +11,18 @@ CREATE table users(
 
 CREATE TABLE categories (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL UNIQUE,
-    type ENUM('income', 'expense') NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    name VARCHAR(50) NOT NULL,
+    type ENUM('income','expense') NOT NULL
 );
 
+INSERT INTO categories (name, type) VALUES 
+('Salaire','income'),
+('Bonus','income'),
+('Finance','income'),
+('Food','expense'),
+('Transport','expense'),
+('Rent','expense'),
+('Entertainment','expense');
 
 CREATE TABLE incomes (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -24,20 +30,10 @@ CREATE TABLE incomes (
     category_id INT NOT NULL,
     amount DECIMAL(10,2) NOT NULL,
     description VARCHAR(255),
-    income_date DATE NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT fk_income_user
-        FOREIGN KEY (user_id)
-        REFERENCES users(id)
-        ON DELETE CASCADE,
-
-    CONSTRAINT fk_income_category
-        FOREIGN KEY (category_id)
-        REFERENCES categories(id)
-        ON DELETE RESTRICT
+    date DATE NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE
 );
-
 
 CREATE TABLE expenses (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -45,16 +41,7 @@ CREATE TABLE expenses (
     category_id INT NOT NULL,
     amount DECIMAL(10,2) NOT NULL,
     description VARCHAR(255),
-    expense_date DATE NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT fk_expense_user
-        FOREIGN KEY (user_id)
-        REFERENCES users(id)
-        ON DELETE CASCADE,
-
-    CONSTRAINT fk_expense_category
-        FOREIGN KEY (category_id)
-        REFERENCES categories(id)
-        ON DELETE RESTRICT
+    date DATE NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE
 );

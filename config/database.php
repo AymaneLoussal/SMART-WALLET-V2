@@ -1,38 +1,34 @@
-<?php
-class database {
-    private string $host = "localhost";
-    private string $db_name = "smartWalletV2";
-    private string $username = "root";
-    private string $password = "";
-    private ?PDO $conn = null;
+<?php 
+ 
+ class Database {
+    private string $host;
+    private string $db_name;
+    private string $user;
+    private string $password;
 
-    private static ?database $instance = null;
-
-    private function __construct(){
-        try{
-            $this->conn = new PDO("mysql:host={$this->host};dbname={$this->db_name};charset=utf8mb4",
-            $this->username,
-            $this->password
+    function __construct($host,$db_name,$user,$pass){
+    $this->host = $host;
+    $this->db_name = $db_name;
+    $this->user = $user;
+    $this->password = $pass;
+  }
+  
+  public function connect(){
+    try {
+        return new PDO(
+            "mysql:host={$this->host};dbname={$this->db_name}",
+            "{$this->user}",
+            "{$this->password}",
+            [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
         );
-        $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-
-
-        } catch(PDOException $exception){
-            die("database connection error: " . $exception->getMessage());
-
-        }
+    } catch (PDOException $e) {
+        error_log($e->getMessage());
+        die("Connection to database failed !");
     }
-
-    public static function getInstance(): database
-    {
-        if (self::$instance === null) {
-            self::$instance = new database();
-        }
-        return self::$instance;
-    }
-
-    public function getconnection(): PDO {
-        return $this->conn;
-    }
+  }
 }
+
+
+
+?>
+ 
