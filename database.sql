@@ -1,47 +1,52 @@
-CREATE DATABASE IF NOT EXISTS smart_wallet;
-USE smart_wallet;
+CREATE DATABASE smartWalletV2;
 
-CREATE TABLE users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    full_name VARCHAR(100) NOT NULL,
+USE smartWalletV2;
+
+
+CREATE table users(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    full_name VARCHAR(50) NOT NULL UNIQUE,
     email VARCHAR(100) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE categories (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(50) NOT NULL,
-    type ENUM('income','expense') NOT NULL
-);
+-- CREATE TABLE categories (
+--     id INT AUTO_INCREMENT PRIMARY KEY,
+--     name VARCHAR(100) NOT NULL UNIQUE,
+--     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ,
+--     user_id INT NOT NULL ,
+--     CONSTRAINT fk_category_user
+--         FOREIGN KEY (user_id)
+--         REFERENCES users(id)
+--         ON DELETE CASCADE
+-- );
 
-INSERT INTO categories (name, type) VALUES 
-('Salaire','income'),
-('Bonus','income'),
-('Finance','income'),
-('Food','expense'),
-('Transport','expense'),
-('Rent','expense'),
-('Entertainment','expense');
+DROP TABLE IF EXISTS incomes, expenses, categories;
+
+
+USE smartWalletV2;
 
 CREATE TABLE incomes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
-    category_id INT NOT NULL,
     amount DECIMAL(10,2) NOT NULL,
+    category VARCHAR(50) NOT NULL,  
     description VARCHAR(255),
-    date DATE NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE
+    income_date DATE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE expenses (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
-    category_id INT NOT NULL,
     amount DECIMAL(10,2) NOT NULL,
+    category VARCHAR(50) NOT NULL, 
     description VARCHAR(255),
-    date DATE NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE
+    expense_date DATE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );

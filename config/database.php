@@ -1,34 +1,39 @@
-<?php 
- 
- class Database {
-    private string $host;
-    private string $db_name;
-    private string $user;
-    private string $password;
-
-    function __construct($host,$db_name,$user,$pass){
-    $this->host = $host;
-    $this->db_name = $db_name;
-    $this->user = $user;
-    $this->password = $pass;
-  }
-  
-  public function connect(){
-    try {
-        return new PDO(
-            "mysql:host={$this->host};dbname={$this->db_name}",
-            "{$this->user}",
-            "{$this->password}",
-            [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
-        );
-    } catch (PDOException $e) {
-        error_log($e->getMessage());
-        die("Connection to database failed !");
+<?php
+// Database.php
+class Database {
+    private static $instance = null;
+    private $connection;
+    
+    // Database credentials
+    private $host = 'localhost';
+    private $dbname = 'smartWalletV2';
+    private $username = 'root';  // Change if needed
+    private $password = '';      // Change if needed
+    
+    private function __construct() {
+        try {
+            $this->connection = new PDO(
+                "mysql:host={$this->host};dbname={$this->dbname};charset=utf8",
+                $this->username,
+                $this->password
+            );
+            $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        } catch (PDOException $e) {
+            die("Database connection failed: " . $e->getMessage());
+        }
     }
-  }
+    
+    // Get database instance
+    public static function getInstance() {
+        if (self::$instance == null) {
+            self::$instance = new Database();
+        }
+        return self::$instance;
+    }
+    
+    // Get the PDO connection
+    public function getConnection() {
+        return $this->connection;
+    }
 }
-
-
-
 ?>
- 
