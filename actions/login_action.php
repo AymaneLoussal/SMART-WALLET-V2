@@ -11,7 +11,7 @@ try {
     $_SESSION["user_id"] = $user->getUserId();
     $_SESSION["user_email"] = $_POST["email"];
 
-    header("Location: ../dashboard.php");
+    header("Location: ../home.php");
     exit;
 
 } catch (Exception $e) {

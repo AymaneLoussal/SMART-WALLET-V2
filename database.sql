@@ -50,3 +50,5 @@ CREATE TABLE expenses (
     
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
+ALTER TABLE incomes CHANGE income_date date DATE NOT NULL;
+ALTER TABLE expenses CHANGE expense_date date DATE NOT NULL;
