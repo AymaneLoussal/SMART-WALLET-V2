@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../Income.php';
+require_once '../models/income.php';
 
 if (!isset($_SESSION['user_id'])) {
     header('Location: ../login.php');

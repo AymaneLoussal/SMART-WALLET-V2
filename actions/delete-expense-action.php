@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../Expense.php';
+require_once '../models/expenses.php';
 
 if (!isset($_SESSION['user_id'])) {
     header('Location: ../login.php');
